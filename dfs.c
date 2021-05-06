@@ -45,6 +45,7 @@ double** mulmr(double num, double **mat, int rows, int cols)
 
 void zhdac ( HWND* hWnd )
 {
+    printf("\nWaiting for click");
     while (1)
     {
 		if (_kbhit()) {
@@ -122,6 +123,9 @@ double** dfs = NULL;
 double dfsGraph[11][11];
 int visited[11] = {};
 int unvisited;
+char *nume[11] = {};
+int numeCheck = 0;
+int last = 0;
 int checker = 1;
 
 void risovac ( HDC hdc, double** A, int* nx, int* ny )
@@ -141,6 +145,8 @@ void risovac ( HDC hdc, double** A, int* nx, int* ny )
               }
             int i;
             char *nn[11] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b"};
+            char *newnume[11] = {};
+            if(numeCheck == 1) for ( int f = 0; f < 11; f++ ) newnume[f] = nume[f];
             int dx = 16, dy = 16, dtx = 7;
             HPEN BPen = CreatePen(PS_SOLID, 2, RGB(50, 0, 255));
             HPEN KPen = CreatePen(PS_SOLID, 1, RGB(20, 20, 5));
@@ -372,7 +378,13 @@ void risovac ( HDC hdc, double** A, int* nx, int* ny )
                     SelectObject(hdc, GGPen);
                 }
                 Ellipse ( hdc, nx[i]-dx, ny[i]-dy, nx[i]+dx, ny[i]+dy );
-                TextOut ( hdc, nx[i]-dtx, ny[i]-dy/2, nn[i], 1 );
+                if(numeCheck == 0) TextOut ( hdc, nx[i]-dtx, ny[i]-dy/2, nn[i], 1 );
+                else{
+                    printf("\nthis - %c",newnume[i]);
+                    TextOut ( hdc, nx[i]-dtx, ny[i]-dy/2, newnume[i], 1 );
+                }
+
+
             };
 }
 
@@ -380,7 +392,7 @@ void risovac ( HDC hdc, double** A, int* nx, int* ny )
 
 void dfsout (  )
 {
-    printf("\ndfs:\n");
+    printf("\n\ndfs:\n");
             for (int i = 0; i < 11; i++)
             {
                 for (int j = 0; j < 11; j++)
@@ -419,17 +431,35 @@ DWORD WINAPI somethingcool (LPVOID lpParam)
         if ( unvisited == -1 ) break;
         else
         {
+            nume[last] = "a";
+            last = last + 1;
             dfcheck(lpParam, unvisited);
         }
     }
+
     dfs = randmm(11, 11);
     for ( int i = 0; i < 11; i++ )
         for ( int j = 0; j < 11; j++ )
             dfs[i][j] = dfsGraph[i][j];
     dfsout();
-    checker = 0;
+
+    printf("\n\nSwitch number");
     zhdac(lpParam);
-    risovac ( lpParam, dfs, nx, ny );
+    numeCheck = 1;
+    checkanddraw(lpParam);
+
+    printf("\n\nBuild dfs graph");
+    zhdac(lpParam);
+    numeCheck = 0;
+    checker = 0;
+    printf("\n\nHere it is:");
+    checkanddraw(lpParam);
+
+    printf("\n\nBuild dfs graph with new numbers");
+    zhdac(lpParam);
+    numeCheck = 1;
+    printf("\n\nHere it is:");
+    checkanddraw(lpParam);
 
 }
 
@@ -443,6 +473,39 @@ void dfcheck ( HWND hWnd, int calledFor )
     {
         if ( Amain[calledFor][i] && !visited[i] )
         {
+            switch(i){
+            case 1:
+                nume[last] = "b";
+                break;
+            case 2:
+                nume[last] = "c";
+                break;
+            case 3:
+                nume[last] = "d";
+                break;
+            case 4:
+                nume[last] = "e";
+                break;
+            case 5:
+                nume[last] = "f";
+                break;
+            case 6:
+                nume[last] = "g";
+                break;
+            case 7:
+                nume[last] = "h";
+                break;
+            case 8:
+                nume[last] = "j";
+                break;
+            case 9:
+                nume[last] = "k";
+                break;
+            case 10:
+                nume[last] = "l";
+                break;
+            }
+            last++;
             dfsGraph[calledFor][i] = 1;
             dfcheck(hWnd,i);
         }
@@ -456,26 +519,26 @@ void checkanddraw ( HDC hdc )
     else risovac ( hdc, dfs, nx, ny );
 }
 
-//Ñîçäà¸ì ïðîòîòèï ôóíêöèè îêíà, êîòîðàÿ áóäåò îïðåäåëåíà íèæå
+//Ð¡Ð¾Ð·Ð´Ð°Ñ‘Ð¼ Ð¿Ñ€Ð¾Ñ‚Ð¾Ñ‚Ð¸Ð¿ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð¾ÐºÐ½Ð°, ÐºÐ¾Ñ‚Ð¾Ñ€Ð°Ñ Ð±ÑƒÐ´ÐµÑ‚ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð° Ð½Ð¸Ð¶Ðµ
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-//îáúÿâëÿåì ñòðîêó-èìÿ ïðîãðàììû
-char ProgName[] = "Ëàáîðàòîðíà ðîáîòà 5";
+//Ð¾Ð±ÑŠÑÐ²Ð»ÑÐµÐ¼ ÑÑ‚Ñ€Ð¾ÐºÑƒ-Ð¸Ð¼Ñ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹
+char ProgName[] = "Ð›Ð°Ð±Ð¾Ñ€Ð°Ñ‚Ð¾Ñ€Ð½Ð° Ñ€Ð¾Ð±Ð¾Ñ‚Ð° 5";
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 {
     HWND hWnd;
     MSG lpMsg;
 
-    WNDCLASS w; //ñîçäà¸ì ýêçåìïëÿð ñòðóêòóðû WNDCLASS
+    WNDCLASS w; //ÑÐ¾Ð·Ð´Ð°Ñ‘Ð¼ ÑÐºÐ·ÐµÐ¼Ð¿Ð»ÑÑ€ ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñ‹ WNDCLASS
 
-    w.lpszClassName = ProgName; //èìÿ ïðîãðàììû - îáúÿâëåíî âûøå
-    w.hInstance = hInstance; //èäåíòèôèêàòîð òåêóùåãî ïðèëîæåíèÿ
-    w.lpfnWndProc = WndProc; //óêàçàòåëü íà ôóíêöèþ îêíà
-    w.hCursor = LoadCursor(NULL, IDC_ARROW); //çàãðóæàåì êóðñîð
-    w.hIcon = 0; //èêîíêè ó íàñ íå áóäåò ïîêà
-    w.lpszMenuName = 0; //è ìåíþ ïîêà íå áóäåò
-    w.hbrBackground = LTGRAY_BRUSH; //WHITE_BRUSH;// öâåò ôîíà îêíà
-    w.style = CS_HREDRAW|CS_VREDRAW; //ñòèëü - ïåðåðèñîâûâàåìîå ïî õ è ïî ó
+    w.lpszClassName = ProgName; //Ð¸Ð¼Ñ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹ - Ð¾Ð±ÑŠÑÐ²Ð»ÐµÐ½Ð¾ Ð²Ñ‹ÑˆÐµ
+    w.hInstance = hInstance; //Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ñ‚ÐµÐºÑƒÑ‰ÐµÐ³Ð¾ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ
+    w.lpfnWndProc = WndProc; //ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð° Ñ„ÑƒÐ½ÐºÑ†Ð¸ÑŽ Ð¾ÐºÐ½Ð°
+    w.hCursor = LoadCursor(NULL, IDC_ARROW); //Ð·Ð°Ð³Ñ€ÑƒÐ¶Ð°ÐµÐ¼ ÐºÑƒÑ€ÑÐ¾Ñ€
+    w.hIcon = 0; //Ð¸ÐºÐ¾Ð½ÐºÐ¸ Ñƒ Ð½Ð°Ñ Ð½Ðµ Ð±ÑƒÐ´ÐµÑ‚ Ð¿Ð¾ÐºÐ°
+    w.lpszMenuName = 0; //Ð¸ Ð¼ÐµÐ½ÑŽ Ð¿Ð¾ÐºÐ° Ð½Ðµ Ð±ÑƒÐ´ÐµÑ‚
+    w.hbrBackground = LTGRAY_BRUSH; //WHITE_BRUSH;// Ñ†Ð²ÐµÑ‚ Ñ„Ð¾Ð½Ð° Ð¾ÐºÐ½Ð°
+    w.style = CS_HREDRAW|CS_VREDRAW; //ÑÑ‚Ð¸Ð»ÑŒ - Ð¿ÐµÑ€ÐµÑ€Ð¸ÑÐ¾Ð²Ñ‹Ð²Ð°ÐµÐ¼Ð¾Ðµ Ð¿Ð¾ Ñ… Ð¸ Ð¿Ð¾ Ñƒ
     w.cbClsExtra = 0;
     w.cbWndExtra = 0;
 
@@ -485,49 +548,49 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
    // HWND hWnd;
     //MSG lpMsg;
 
-//Ñîçäàäèì îêíî â ïàìÿòè, çàïîëíèâ àðãóìåíòû CreateWindow
-    hWnd=CreateWindow(ProgName, //Èìÿ ïðîãðàììû
-        "Ëàáîðàòîðíà ðîáîòà 3", //Çàãîëîâîê îêíà
-        WS_OVERLAPPEDWINDOW, //Ñòèëü îêíà - ïåðåêðûâàþùååñÿ
-        0, //ïîëîæåíèå îêíà íà ýêðàíå ïî õ
-        0, //ïîëîæåíèå ïî ó
-        1920, //øèðèíà
-        1080, //âèñîòà
-        (HWND)NULL, //èäåíòèôèêàòîð ðîäèòåëüñêîãî îêíà
-        (HMENU)NULL, //èäåíòèôèêàòîð ìåíþ
-        (HINSTANCE)hInstance, //èäåíòèôèêàòîð ýêçåìïëÿðà ïðîãðàììû
-        (HINSTANCE)NULL); //îòñóòñòâèå äîïîëíèòåëüíûõ ïàðàìåòðîâ
+//Ð¡Ð¾Ð·Ð´Ð°Ð´Ð¸Ð¼ Ð¾ÐºÐ½Ð¾ Ð² Ð¿Ð°Ð¼ÑÑ‚Ð¸, Ð·Ð°Ð¿Ð¾Ð»Ð½Ð¸Ð² Ð°Ñ€Ð³ÑƒÐ¼ÐµÐ½Ñ‚Ñ‹ CreateWindow
+    hWnd=CreateWindow(ProgName, //Ð˜Ð¼Ñ Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹
+        "Ð›Ð°Ð±Ð¾Ñ€Ð°Ñ‚Ð¾Ñ€Ð½Ð° Ñ€Ð¾Ð±Ð¾Ñ‚Ð° 3", //Ð—Ð°Ð³Ð¾Ð»Ð¾Ð²Ð¾Ðº Ð¾ÐºÐ½Ð°
+        WS_OVERLAPPEDWINDOW, //Ð¡Ñ‚Ð¸Ð»ÑŒ Ð¾ÐºÐ½Ð° - Ð¿ÐµÑ€ÐµÐºÑ€Ñ‹Ð²Ð°ÑŽÑ‰ÐµÐµÑÑ
+        0, //Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ð¾ÐºÐ½Ð° Ð½Ð° ÑÐºÑ€Ð°Ð½Ðµ Ð¿Ð¾ Ñ…
+        0, //Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ð¿Ð¾ Ñƒ
+        1920, //ÑˆÐ¸Ñ€Ð¸Ð½Ð°
+        1080, //Ð²Ð¸ÑÐ¾Ñ‚Ð°
+        (HWND)NULL, //Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÑŒÑÐºÐ¾Ð³Ð¾ Ð¾ÐºÐ½Ð°
+        (HMENU)NULL, //Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ð¼ÐµÐ½ÑŽ
+        (HINSTANCE)hInstance, //Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ ÑÐºÐ·ÐµÐ¼Ð¿Ð»ÑÑ€Ð° Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹
+        (HINSTANCE)NULL); //Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²Ð¸Ðµ Ð´Ð¾Ð¿Ð¾Ð»Ð½Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ñ… Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¾Ð²
 
-//Âûâîäèì îêíî èç ïàìÿòè íà ýêðàí
+//Ð’Ñ‹Ð²Ð¾Ð´Ð¸Ð¼ Ð¾ÐºÐ½Ð¾ Ð¸Ð· Ð¿Ð°Ð¼ÑÑ‚Ð¸ Ð½Ð° ÑÐºÑ€Ð°Ð½
     ShowWindow(hWnd, nCmdShow);
-//Îáíîâèì ñîäåðæèìîå îêíà
+//ÐžÐ±Ð½Ð¾Ð²Ð¸Ð¼ ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ð¼Ð¾Ðµ Ð¾ÐºÐ½Ð°
  //   UpdateWindow(hWnd);
 
         DWORD dwThreadId = 1;
 
         HANDLE cool;
         cool = CreateThread(NULL, 0, somethingcool, &hWnd, 0, &dwThreadId);
-//Öèêë îäåðæàííÿ ïîâ³äîìëåíü
+//Ð¦Ð¸ÐºÐ» Ð¾Ð´ÐµÑ€Ð¶Ð°Ð½Ð½Ñ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½ÑŒ
 
-    while(GetMessage(&lpMsg, hWnd, 0, 0)) { //Ïîëó÷àåì ñîîáùåíèå èç î÷åðåäè
-            TranslateMessage(&lpMsg); //Ïðåîáðàçóåò ñîîáùåíèÿ êëàâèø â ñèìâîëû
-            DispatchMessage(&lpMsg); //Ïåðåäà¸ò ñîîáùåíèå ñîîòâåòñòâóþùåé ôóíêöèè îêíà
+    while(GetMessage(&lpMsg, hWnd, 0, 0)) { //ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ð¸Ð· Ð¾Ñ‡ÐµÑ€ÐµÐ´Ð¸
+            TranslateMessage(&lpMsg); //ÐŸÑ€ÐµÐ¾Ð±Ñ€Ð°Ð·ÑƒÐµÑ‚ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ ÐºÐ»Ð°Ð²Ð¸Ñˆ Ð² ÑÐ¸Ð¼Ð²Ð¾Ð»Ñ‹
+            DispatchMessage(&lpMsg); //ÐŸÐµÑ€ÐµÐ´Ð°Ñ‘Ñ‚ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ ÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÑƒÑŽÑ‰ÐµÐ¹ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð¾ÐºÐ½Ð°
         }
     return(lpMsg.wParam);
 }
 
-//Ôóíêöèÿ îêíà
+//Ð¤ÑƒÐ½ÐºÑ†Ð¸Ñ Ð¾ÐºÐ½Ð°
 LRESULT CALLBACK WndProc(HWND hWnd, UINT messg,
                         WPARAM wParam, LPARAM lParam)
     {
-    HDC hdc; //ñîçäà¸ì êîíòåêñò óñòðîéñòâà
-    PAINTSTRUCT ps; //ñîçäà¸ì ýêçåìïëÿð ñòðóêòóðû ãðàôè÷åñêîãî âûâîäà
+    HDC hdc; //ÑÐ¾Ð·Ð´Ð°Ñ‘Ð¼ ÐºÐ¾Ð½Ñ‚ÐµÐºÑÑ‚ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð°
+    PAINTSTRUCT ps; //ÑÐ¾Ð·Ð´Ð°Ñ‘Ð¼ ÑÐºÐ·ÐµÐ¼Ð¿Ð»ÑÑ€ ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñ‹ Ð³Ñ€Ð°Ñ„Ð¸Ñ‡ÐµÑÐºÐ¾Ð³Ð¾ Ð²Ñ‹Ð²Ð¾Ð´Ð°
 
 
-//Öèêë îáðàáîòêè ñîîáùåíèé
+//Ð¦Ð¸ÐºÐ» Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ¸ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹
     switch ( messg )
     {
-    //ñîîáùåíèå ðèñîâàíèÿ
+    //ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ñ€Ð¸ÑÐ¾Ð²Ð°Ð½Ð¸Ñ
         case WM_PAINT :
 
             hdc=BeginPaint(hWnd, &ps);
