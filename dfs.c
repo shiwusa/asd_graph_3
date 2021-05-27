@@ -236,6 +236,10 @@ void risovac ( HDC hdc, double** A, int* nx, int* ny )
                                         Arc(hdc, nx[i]-50, ny[i]-100, nx[j]+70, ny[j]+70, nx[j], ny[j], nx[i], ny[i]);
                                         arrow(-120, nx[j]+11, ny[j]-dy+8);
                                         break;
+				    case 4: case -4:
+                                        Arc(hdc, nx[i]-60, ny[i]-100, nx[j]+65, ny[j]+110, nx[j], ny[j], nx[i], ny[i]);
+                                        arrow(-120, nx[j]+4, ny[j]-dy);
+                                        break;
                                     }
                                 }
                             //printf("\n%i\t%i\n",i,j);
